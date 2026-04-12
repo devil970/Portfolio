@@ -57,16 +57,14 @@
             </div>
 
             <div class="social-links">
-                <a href="https://github.com/devil970" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/atharva-dhawane-6486551b2/" target="_blank"><i
-                        class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com/atharva_dhawane_" target="_blank"><i
-                        class="fab fa-instagram"></i></a>
+                <a href="https://github.com/devil970" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/atharva-dhawane-6486551b2/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.instagram.com/atharva_dhawane_" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
         <div class="hero-visual">
-            <!-- Abstract decorative element or placeholder for 3D object/Image -->
-            <div class="circle-gradient"></div>
+            <div class="abstract-glow"></div>
+            <img src="assets/my avtar.png" alt="Atharva Dhawane" class="profile-pic" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.5">
         </div>
     </section>
 
@@ -128,7 +126,7 @@
     <section id="projects" class="section projects">
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
+            <div class="projects-grid" id="featured-projects">
                 <!-- Project 1 -->
                 <article class="project-card">
                     <div class="project-image">
@@ -259,26 +257,9 @@
                     </div>
                 </article>
 
-                <!-- Project 7 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <img src="assets/Irise flower clasification.png" alt="Project 7 Screenshot">
-                    </div>
-                    <div class="project-info">
-                        <h3>Iris Flower Classification</h3>
-                        <p>Machine learning model to classify iris flower species using scikit-learn.</p>
-                        <div class="tags">
-                            <span>Python</span>
-                            <span>ML</span>
-                            <span>Scikit-learn</span>
-                            <span>Pandas</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/devil970/iriseflowerclasification.git" class="link-btn"><i class="fab fa-github"></i> Code</a>
-                            <a href="#" class="link-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-                        </div>
-                    </div>
-                </article>
+            </div>
+            <div class="see-more-wrapper">
+                <a href="projects.html" class="btn btn-outline see-more-btn">See More <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </section>
@@ -390,6 +371,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -18,27 +18,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Scroll Reveal Animation
-    const sections = document.querySelectorAll('section');
+    const sections = document.querySelectorAll('section, .projects-page');
 
     const revealSection = (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Optional: Stop observing once revealed
-                // observer.unobserve(entry.target);
             }
         });
     };
 
     const sectionObserver = new IntersectionObserver(revealSection, {
         root: null,
-        threshold: 0.15, // Trigger when 15% of section is visible
+        threshold: 0.05,
     });
 
     sections.forEach(section => {
         section.classList.add('hidden');
         sectionObserver.observe(section);
     });
+
+    // Animate project cards on projects page
+    const cards = document.querySelectorAll('.project-card');
+    if (cards.length) {
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, i * 60);
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => {
+            card.classList.add('hidden');
+            cardObserver.observe(card);
+        });
+    }
 
     // Contact Modal Logic
     const contactBtn = document.getElementById('contactBtn');
@@ -68,6 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === modal) {
                 closeModal();
             }
+        });
+    }
+
+    // Initialize VanillaTilt for 3D effects
+    if (typeof VanillaTilt !== 'undefined') {
+        VanillaTilt.init(document.querySelectorAll(".skill-card, .project-card, .cert-card"), {
+            max: 12,
+            speed: 500,
+            glare: true,
+            "max-glare": 0.2,
+            scale: 1.05
         });
     }
 });
