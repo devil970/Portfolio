@@ -247,19 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setLoading(true);
 
-      // Map form values to EmailJS template variables
       const subjectLabels = {
         internship: 'Internship Opportunity', job: 'Job Opportunity',
         freelance: 'Freelance Project', collaboration: 'Collaboration', other: 'Other',
       };
 
       const templateParams = {
-        name:     fields.name.el.value.trim(),
-        email:    fields.email.el.value.trim(),
-        subject:  subjectLabels[fields.subject.el.value] || fields.subject.el.value,
-        message:  fields.message.el.value.trim(),
-        time:     new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        name:    fields.name.el.value.trim(),
+        email:   fields.email.el.value.trim(),
+        subject: subjectLabels[fields.subject.el.value] || fields.subject.el.value,
+        message: fields.message.el.value.trim(),
+        time:    new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
       };
+
+      console.log('Sending templateParams:', templateParams);
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
         .then(() => {
