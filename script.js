@@ -165,9 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ────────────────────────────────────────────────────────── */
 
   // ── Replace these 3 values with your EmailJS credentials
-  const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
-  const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+  const EMAILJS_PUBLIC_KEY  = 'PwosmWQOgpNYdQjFS';
+  const EMAILJS_SERVICE_ID  = 'service_lwzzu1n';
+  const EMAILJS_TEMPLATE_ID = 'template_l10pbma';
 
   // Initialise EmailJS once
   if (typeof emailjs !== 'undefined') {
