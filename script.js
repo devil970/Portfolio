@@ -269,8 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { successEl.hidden = true; }, 6000);
           }
         })
-        .catch(() => {
-          showError('Failed to send message. Please email me directly at atharvadhawane789@gmail.com');
+        .catch(err => {
+          const reason = err?.text || err?.message || JSON.stringify(err) || 'Unknown error';
+          showError(`Error: ${reason}`);
         })
         .finally(() => setLoading(false));
     });
