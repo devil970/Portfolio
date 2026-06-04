@@ -216,7 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
       btnLoading.hidden = false;
 
       // ── Submit to backend API
-      const BACKEND_URL = 'http://localhost:5000/api/contact';
+      // Auto-detects environment: uses Render in production, localhost in dev
+      const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000/api/contact'
+        : 'https://portfolio-contact-backend-p7qy.onrender.com/api/contact';
 
       fetch(BACKEND_URL, {
         method: 'POST',
