@@ -160,9 +160,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* -- Contact Form Validation & Submission ─────────────────
-     Client-side validation + mailto fallback (no backend needed)
+  /* -- EmailJS Contact Form ──────────────────────────────────
+     No backend needed — works on Netlify, Vercel, GitHub Pages
   ────────────────────────────────────────────────────────── */
+
+  // ── Replace these 3 values with your EmailJS credentials
+  const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+  const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+  // Initialise EmailJS once
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     const fields = {
@@ -181,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (errEl) errEl.textContent = err;
         err ? el.classList.add('field-error') : el.classList.remove('field-error');
       });
-      // Clear error on input
       el.addEventListener('input', () => {
         const errEl = el.closest('.form-group').querySelector('.form-error');
         if (errEl) errEl.textContent = '';
@@ -189,78 +199,80 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    const submitBtn  = document.getElementById('formSubmitBtn');
+    const btnText    = submitBtn.querySelector('.btn-text');
+    const btnLoading = submitBtn.querySelector('.btn-loading');
+    const successEl  = document.getElementById('formSuccess');
+
+    // Helper: show inline API error
+    const showError = msg => {
+      let errEl = contactForm.querySelector('.form-api-error');
+      if (!errEl) {
+        errEl = document.createElement('p');
+        errEl.className = 'form-api-error';
+        errEl.style.cssText = 'color:#f87171;margin-top:.75rem;font-size:.9rem;text-align:center;';
+        submitBtn.insertAdjacentElement('afterend', errEl);
+      }
+      errEl.textContent = msg;
+      setTimeout(() => { errEl.textContent = ''; }, 6000);
+    };
+
+    const setLoading = on => {
+      submitBtn.disabled = on;
+      btnText.hidden     = on;
+      btnLoading.hidden  = !on;
+    };
+
     contactForm.addEventListener('submit', e => {
       e.preventDefault();
 
       // Validate all fields
       let isValid = true;
-      Object.entries(fields).forEach(([, { el, validate }]) => {
+      Object.values(fields).forEach(({ el, validate }) => {
         if (!el) return;
         const err = validate(el.value);
         const errEl = el.closest('.form-group').querySelector('.form-error');
         if (errEl) errEl.textContent = err;
-        if (err) {
-          el.classList.add('field-error');
-          isValid = false;
-        }
+        if (err) { el.classList.add('field-error'); isValid = false; }
       });
-
       if (!isValid) return;
 
-      // Show loading state
-      const submitBtn = document.getElementById('formSubmitBtn');
-      const btnText = submitBtn.querySelector('.btn-text');
-      const btnLoading = submitBtn.querySelector('.btn-loading');
-      submitBtn.disabled = true;
-      btnText.hidden = true;
-      btnLoading.hidden = false;
+      // Guard: prevent duplicate submissions
+      if (submitBtn.disabled) return;
 
-      // ── Submit to backend API
-      // Auto-detects environment: uses Render in production, localhost in dev
-      const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000/api/contact'
-        : 'https://portfolio-contact-backend-p7qy.onrender.com/api/contact';
+      if (typeof emailjs === 'undefined') {
+        showError('Email service unavailable. Please email me directly.');
+        return;
+      }
 
-      fetch(BACKEND_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:    fields.name.el.value.trim(),
-          email:   fields.email.el.value.trim(),
-          subject: fields.subject.el.value,
-          message: fields.message.el.value.trim(),
-        }),
-      })
-        .then(async res => {
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.errors ? data.errors.join(' ') : data.message);
-          return data;
-        })
+      setLoading(true);
+
+      // Map form values to EmailJS template variables
+      const subjectLabels = {
+        internship: 'Internship Opportunity', job: 'Job Opportunity',
+        freelance: 'Freelance Project', collaboration: 'Collaboration', other: 'Other',
+      };
+
+      const templateParams = {
+        from_name:    fields.name.el.value.trim(),
+        from_email:   fields.email.el.value.trim(),
+        subject:      subjectLabels[fields.subject.el.value] || fields.subject.el.value,
+        message:      fields.message.el.value.trim(),
+        reply_to:     fields.email.el.value.trim(),
+      };
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(() => {
           contactForm.reset();
-          const successEl = document.getElementById('formSuccess');
           if (successEl) {
             successEl.hidden = false;
             setTimeout(() => { successEl.hidden = true; }, 6000);
           }
         })
-        .catch(err => {
-          // Show inline error below the submit button
-          let errEl = contactForm.querySelector('.form-api-error');
-          if (!errEl) {
-            errEl = document.createElement('p');
-            errEl.className = 'form-api-error';
-            errEl.style.cssText = 'color:#f87171;margin-top:.75rem;font-size:.9rem;text-align:center;';
-            submitBtn.insertAdjacentElement('afterend', errEl);
-          }
-          errEl.textContent = err.message || 'Failed to send. Please email me directly.';
-          setTimeout(() => { errEl.textContent = ''; }, 6000);
+        .catch(() => {
+          showError('Failed to send message. Please email me directly at atharvadhawane789@gmail.com');
         })
-        .finally(() => {
-          submitBtn.disabled = false;
-          btnText.hidden = false;
-          btnLoading.hidden = true;
-        });
+        .finally(() => setLoading(false));
     });
   }
 
