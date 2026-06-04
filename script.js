@@ -254,14 +254,14 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const templateParams = {
-        from_name:    fields.name.el.value.trim(),
-        from_email:   fields.email.el.value.trim(),
-        subject:      subjectLabels[fields.subject.el.value] || fields.subject.el.value,
-        message:      fields.message.el.value.trim(),
-        reply_to:     fields.email.el.value.trim(),
+        name:     fields.name.el.value.trim(),
+        email:    fields.email.el.value.trim(),
+        subject:  subjectLabels[fields.subject.el.value] || fields.subject.el.value,
+        message:  fields.message.el.value.trim(),
+        time:     new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
       };
 
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
         .then(() => {
           contactForm.reset();
           if (successEl) {
@@ -270,8 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         })
         .catch(err => {
-          const reason = err?.text || err?.message || JSON.stringify(err) || 'Unknown error';
-          showError(`Error: ${reason}`);
+          const reason = err?.text || err?.message || 'Please try again.';
+          showError(`Failed to send message. ${reason}`);
         })
         .finally(() => setLoading(false));
     });
