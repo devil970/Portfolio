@@ -2,6 +2,34 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* -- Intro Video (plays once per session) ------------------- */
+  const overlay    = document.getElementById('introOverlay');
+  const introVideo = document.getElementById('introVideo');
+  const skipBtn    = document.getElementById('introSkip');
+  const playBtn    = document.getElementById('introPlayBtn');
+
+  const dismissIntro = () => {
+    sessionStorage.setItem('introSeen', '1');
+    introVideo.pause();
+    overlay.classList.add('fade-out');
+    setTimeout(() => { overlay.style.display = 'none'; }, 600);
+  };
+
+  if (sessionStorage.getItem('introSeen')) {
+    overlay.style.display = 'none';
+  } else {
+    // Wait for user click to unlock audio
+    playBtn.addEventListener('click', () => {
+      playBtn.style.display = 'none';
+      introVideo.muted = false;
+      introVideo.volume = 1;
+      introVideo.play();
+    }, { once: true });
+
+    introVideo.addEventListener('ended', dismissIntro);
+    skipBtn.addEventListener('click', dismissIntro);
+  }
+
   /* -- Footer year ------------------------------------------- */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -302,6 +330,83 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
     });
+  }
+
+  /* -- Hero Video Controls ---------------------------------- */
+  const heroVideo       = document.getElementById('heroVideo');
+  const heroPlayBtn     = document.getElementById('heroPlayBtn');
+  const heroMuteBtn     = document.getElementById('heroMuteBtn');
+  const heroReplayBtn   = document.getElementById('heroReplayBtn');
+  const heroSoundPrompt = document.getElementById('heroSoundPrompt');
+
+  if (heroVideo && heroPlayBtn && heroMuteBtn && heroReplayBtn) {
+
+    const updatePlayIcon = () => {
+      heroPlayBtn.innerHTML = heroVideo.paused
+        ? '<i class="fas fa-play"></i>'
+        : '<i class="fas fa-pause"></i>';
+    };
+
+    const enableSound = () => {
+      heroVideo.muted = false;
+      heroVideo.volume = 1;
+      heroMuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      if (heroSoundPrompt) heroSoundPrompt.style.display = 'none';
+      localStorage.setItem('heroSoundEnabled', '1');
+    };
+
+    const disableSound = () => {
+      heroVideo.muted = true;
+      heroMuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      localStorage.removeItem('heroSoundEnabled');
+    };
+
+    // Play / Pause
+    heroPlayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      heroVideo.paused ? heroVideo.play() : heroVideo.pause();
+      updatePlayIcon();
+    });
+
+    // Mute / Unmute
+    heroMuteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      heroVideo.muted ? enableSound() : disableSound();
+    });
+
+    // Replay
+    heroReplayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      heroVideo.currentTime = 0;
+      heroVideo.play();
+      updatePlayIcon();
+    });
+
+    // Keep play icon in sync
+    heroVideo.addEventListener('pause', updatePlayIcon);
+    heroVideo.addEventListener('play',  updatePlayIcon);
+
+    // Mobile: tap to show/hide controls
+    const videoCard = document.getElementById('heroVideoCard');
+    videoCard.addEventListener('touchstart', () => {
+      videoCard.classList.toggle('controls-visible');
+    }, { passive: true });
+
+    // Click video card to enable sound
+    videoCard.addEventListener('click', () => {
+      if (heroVideo.muted) enableSound();
+    });
+
+    // Return visit: auto-unmute
+    if (localStorage.getItem('heroSoundEnabled')) {
+      const unlock = () => {
+        enableSound();
+        document.removeEventListener('click', unlock);
+        document.removeEventListener('touchstart', unlock);
+      };
+      document.addEventListener('click', unlock);
+      document.addEventListener('touchstart', unlock);
+    }
   }
 
   /* -- VanillaTilt ------------------------------------------- */

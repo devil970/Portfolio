@@ -32,7 +32,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preload" as="image" href="assets/my avtar.png" fetchpriority="high">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"></noscript>
   <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
@@ -72,6 +71,15 @@
 </head>
 
 <body>
+
+  <!-- ═══ INTRO VIDEO OVERLAY ══════════════════════════════════════════════ -->
+  <div id="introOverlay">
+    <video id="introVideo" src="assets/introvideo.mp4" playsinline></video>
+    <div id="introPlayBtn" style="z-index:10001">
+      <i class="fas fa-play"></i>
+    </div>
+    <button id="introSkip"><i class="fas fa-forward" aria-hidden="true"></i> Skip</button>
+  </div>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -127,9 +135,56 @@
           <a href="mailto:atharvadhawane789@gmail.com" aria-label="Email Atharva Dhawane"><i class="fas fa-envelope" aria-hidden="true"></i></a>
         </nav>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="abstract-glow"></div>
-        <img src="assets/my avtar.png" alt="Atharva Dhawane – Full Stack Web Developer from Maharashtra, India" class="profile-pic" fetchpriority="high" width="380" height="380" decoding="sync">
+      <div class="hero-visual">
+
+        <!-- Freelance badge above the card -->
+        <div class="hero-freelance-badge">
+          <span class="hero-freelance-dot"></span>
+          Available for Freelance &amp; Full-Time Opportunities
+        </div>
+
+        <!-- Video card -->
+        <div class="hero-video-card" id="heroVideoCard">
+          <div class="hero-video-glow"></div>
+          <video
+            id="heroVideo"
+            class="hero-video"
+            src="assets/introvideo.mp4"
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+            aria-label="Atharva Dhawane – portfolio introduction video"
+          ></video>
+
+          <!-- Click-to-enable-sound overlay -->
+          <div id="heroSoundPrompt" class="hero-sound-prompt">
+            <span>🔊 Click to Enable Sound</span>
+          </div>
+
+          <!-- Video Controls -->
+          <div class="hero-video-controls" id="heroVideoControls">
+            <button class="hero-ctrl-btn" id="heroPlayBtn" aria-label="Play or pause video">
+              <i class="fas fa-pause"></i>
+            </button>
+            <button class="hero-ctrl-btn" id="heroMuteBtn" aria-label="Toggle sound">
+              <i class="fas fa-volume-mute"></i>
+            </button>
+            <button class="hero-ctrl-btn" id="heroReplayBtn" aria-label="Replay video">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+
+          <!-- Floating tech stack overlay -->
+          <div class="hero-tech-overlay">
+            <span>JavaScript</span>
+            <span>Python</span>
+            <span>Flask</span>
+            <span>MySQL</span>
+            <span>PHP</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
