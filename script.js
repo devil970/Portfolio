@@ -2,34 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* -- Intro Video (plays once per session) ------------------- */
-  const overlay    = document.getElementById('introOverlay');
-  const introVideo = document.getElementById('introVideo');
-  const skipBtn    = document.getElementById('introSkip');
-  const playBtn    = document.getElementById('introPlayBtn');
-
-  const dismissIntro = () => {
-    sessionStorage.setItem('introSeen', '1');
-    introVideo.pause();
-    overlay.classList.add('fade-out');
-    setTimeout(() => { overlay.style.display = 'none'; }, 600);
-  };
-
-  if (sessionStorage.getItem('introSeen')) {
-    overlay.style.display = 'none';
-  } else {
-    // Wait for user click to unlock audio
-    playBtn.addEventListener('click', () => {
-      playBtn.style.display = 'none';
-      introVideo.muted = false;
-      introVideo.volume = 1;
-      introVideo.play();
-    }, { once: true });
-
-    introVideo.addEventListener('ended', dismissIntro);
-    skipBtn.addEventListener('click', dismissIntro);
-  }
-
   /* -- Footer year ------------------------------------------- */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -131,12 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* -- Experience / Education Tab Switching ────────────────── */
+  /* -- Experience / Education Tab Switching ------------------ */
   const tabBtns = document.querySelectorAll('.tab-btn');
   if (tabBtns.length) {
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Deactivate all
         tabBtns.forEach(b => {
           b.classList.remove('tab-active');
           b.setAttribute('aria-selected', 'false');
@@ -145,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
           p.classList.remove('tab-panel-active');
           p.hidden = true;
         });
-        // Activate clicked
         btn.classList.add('tab-active');
         btn.setAttribute('aria-selected', 'true');
         const target = document.getElementById(btn.getAttribute('aria-controls'));
@@ -157,27 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* -- Project Category Filtering ────────────────────────────
-     Filters cards by data-category without page reload
-  ────────────────────────────────────────────────────────── */
-  const filterBtns = document.querySelectorAll('.filter-btn');
+  /* -- Project Category Filtering ---------------------------- */
+  const filterBtns   = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('#projects-grid .project-card');
 
   if (filterBtns.length && projectCards.length) {
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
-
-        // Update active button
         filterBtns.forEach(b => b.classList.remove('filter-active'));
         btn.classList.add('filter-active');
-
-        // Show/hide cards
         projectCards.forEach((card, i) => {
           const match = filter === 'all' || card.dataset.category === filter;
           if (match) {
             card.classList.remove('hidden-filter');
-            // Re-trigger stagger animation
             card.classList.remove('visible');
             setTimeout(() => card.classList.add('visible'), i * 60);
           } else {
@@ -188,16 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* -- EmailJS Contact Form ──────────────────────────────────
-     No backend needed — works on Netlify, Vercel, GitHub Pages
-  ────────────────────────────────────────────────────────── */
-
-  // ── Replace these 3 values with your EmailJS credentials
+  /* -- EmailJS Contact Form ---------------------------------- */
   const EMAILJS_PUBLIC_KEY  = 'PwosmWQOgpNYdQjFS';
   const EMAILJS_SERVICE_ID  = 'service_lwzzu1n';
   const EMAILJS_TEMPLATE_ID = 'template_l10pbma';
 
-  // Initialise EmailJS once
   if (typeof emailjs !== 'undefined') {
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
   }
@@ -211,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
       message: { el: document.getElementById('contact-message'), validate: v => v.trim().length >= 10 ? '' : 'Message must be at least 10 characters.' },
     };
 
-    // Live validation on blur
     Object.values(fields).forEach(({ el, validate }) => {
       if (!el) return;
       el.addEventListener('blur', () => {
@@ -232,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLoading = submitBtn.querySelector('.btn-loading');
     const successEl  = document.getElementById('formSuccess');
 
-    // Helper: show inline API error
     const showError = msg => {
       let errEl = contactForm.querySelector('.form-api-error');
       if (!errEl) {
@@ -253,8 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     contactForm.addEventListener('submit', e => {
       e.preventDefault();
-
-      // Validate all fields
       let isValid = true;
       Object.values(fields).forEach(({ el, validate }) => {
         if (!el) return;
@@ -264,22 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (err) { el.classList.add('field-error'); isValid = false; }
       });
       if (!isValid) return;
-
-      // Guard: prevent duplicate submissions
       if (submitBtn.disabled) return;
-
-      if (typeof emailjs === 'undefined') {
-        showError('Email service unavailable. Please email me directly.');
-        return;
-      }
+      if (typeof emailjs === 'undefined') { showError('Email service unavailable. Please email me directly.'); return; }
 
       setLoading(true);
-
-      const subjectLabels = {
-        internship: 'Internship Opportunity', job: 'Job Opportunity',
-        freelance: 'Freelance Project', collaboration: 'Collaboration', other: 'Other',
-      };
-
+      const subjectLabels = { internship: 'Internship Opportunity', job: 'Job Opportunity', freelance: 'Freelance Project', collaboration: 'Collaboration', other: 'Other' };
       const templateParams = {
         name:    fields.name.el.value.trim(),
         email:   fields.email.el.value.trim(),
@@ -288,125 +231,90 @@ document.addEventListener('DOMContentLoaded', () => {
         time:    new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
       };
 
-      console.log('Sending templateParams:', templateParams);
-
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
         .then(() => {
           contactForm.reset();
-          if (successEl) {
-            successEl.hidden = false;
-            setTimeout(() => { successEl.hidden = true; }, 6000);
-          }
+          if (successEl) { successEl.hidden = false; setTimeout(() => { successEl.hidden = true; }, 6000); }
         })
-        .catch(err => {
-          const reason = err?.text || err?.message || 'Please try again.';
-          showError(`Failed to send message. ${reason}`);
-        })
+        .catch(err => { showError(`Failed to send message. ${err?.text || err?.message || 'Please try again.'}`); })
         .finally(() => setLoading(false));
     });
   }
 
-  /* -- Contact Modal (quick-contact fallback) ─────────────── */
+  /* -- Contact Modal ----------------------------------------- */
   const contactBtn = document.getElementById('contactBtn');
   const modal      = document.getElementById('contactModal');
   const closeBtn   = document.querySelector('.close-btn');
 
   if (contactBtn && modal && closeBtn) {
-    const openModal = () => {
-      modal.style.display = 'flex';
-      requestAnimationFrame(() => { requestAnimationFrame(() => modal.classList.add('show')); });
-      modal.setAttribute('aria-hidden', 'false');
-      closeBtn.focus();
-    };
-    const closeModal = () => {
-      modal.classList.remove('show');
-      modal.setAttribute('aria-hidden', 'true');
-      setTimeout(() => { modal.style.display = 'none'; }, 300);
-      contactBtn.focus();
-    };
+    const openModal  = () => { modal.style.display = 'flex'; requestAnimationFrame(() => { requestAnimationFrame(() => modal.classList.add('show')); }); modal.setAttribute('aria-hidden', 'false'); closeBtn.focus(); };
+    const closeModal = () => { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); setTimeout(() => { modal.style.display = 'none'; }, 300); contactBtn.focus(); };
     contactBtn.addEventListener('click', openModal);
     closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('show')) closeModal(); });
   }
 
-  /* -- Hero Video Controls ---------------------------------- */
-  const heroVideo       = document.getElementById('heroVideo');
-  const heroPlayBtn     = document.getElementById('heroPlayBtn');
-  const heroMuteBtn     = document.getElementById('heroMuteBtn');
-  const heroReplayBtn   = document.getElementById('heroReplayBtn');
-  const heroSoundPrompt = document.getElementById('heroSoundPrompt');
+  /* -- Hero Video Control ------------------------------------ */
+  const heroVideo = document.getElementById('heroVideo');
+  const heroPlayOverlay = document.getElementById('heroPlayOverlay');
+  const heroPlayBtn = document.getElementById('heroPlayBtn');
+  const heroMuteBtn = document.getElementById('heroMuteBtn');
 
-  if (heroVideo && heroPlayBtn && heroMuteBtn && heroReplayBtn) {
+  if (heroVideo && heroPlayOverlay && heroPlayBtn && heroMuteBtn) {
+    heroVideo.muted = true;
 
-    const updatePlayIcon = () => {
-      heroPlayBtn.innerHTML = heroVideo.paused
-        ? '<i class="fas fa-play"></i>'
-        : '<i class="fas fa-pause"></i>';
+    const togglePlay = () => {
+      if (heroVideo.paused) {
+        heroVideo.play().then(() => {
+          heroPlayOverlay.classList.add('hidden');
+          heroPlayBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          heroPlayBtn.setAttribute('aria-label', 'Pause video');
+        }).catch(err => {
+          console.error("Playback failed", err);
+        });
+      } else {
+        heroVideo.pause();
+        heroPlayOverlay.classList.remove('hidden');
+        heroPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+        heroPlayBtn.setAttribute('aria-label', 'Play video');
+      }
     };
 
-    const enableSound = () => {
-      heroVideo.muted = false;
-      heroVideo.volume = 1;
-      heroMuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-      if (heroSoundPrompt) heroSoundPrompt.style.display = 'none';
-      localStorage.setItem('heroSoundEnabled', '1');
+    const toggleMute = () => {
+      heroVideo.muted = !heroVideo.muted;
+      if (heroVideo.muted) {
+        heroMuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        heroMuteBtn.setAttribute('aria-label', 'Unmute video');
+      } else {
+        heroMuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        heroMuteBtn.setAttribute('aria-label', 'Mute video');
+      }
     };
 
-    const disableSound = () => {
-      heroVideo.muted = true;
-      heroMuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-      localStorage.removeItem('heroSoundEnabled');
-    };
-
-    // Play / Pause
+    heroPlayOverlay.addEventListener('click', togglePlay);
     heroPlayBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      heroVideo.paused ? heroVideo.play() : heroVideo.pause();
-      updatePlayIcon();
+      togglePlay();
     });
-
-    // Mute / Unmute
     heroMuteBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      heroVideo.muted ? enableSound() : disableSound();
+      toggleMute();
     });
+    heroVideo.addEventListener('click', togglePlay);
 
-    // Replay
-    heroReplayBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      heroVideo.currentTime = 0;
-      heroVideo.play();
-      updatePlayIcon();
+    heroVideo.addEventListener('play', () => {
+      heroVideo.parentElement.classList.add('controls-visible');
     });
-
-    // Keep play icon in sync
-    heroVideo.addEventListener('pause', updatePlayIcon);
-    heroVideo.addEventListener('play',  updatePlayIcon);
-
-    // Mobile: tap to show/hide controls
-    const videoCard = document.getElementById('heroVideoCard');
-    videoCard.addEventListener('touchstart', () => {
-      videoCard.classList.toggle('controls-visible');
-    }, { passive: true });
-
-    // Click video card to enable sound
-    videoCard.addEventListener('click', () => {
-      if (heroVideo.muted) enableSound();
+    heroVideo.addEventListener('pause', () => {
+      heroVideo.parentElement.classList.remove('controls-visible');
     });
-
-    // Return visit: auto-unmute
-    if (localStorage.getItem('heroSoundEnabled')) {
-      const unlock = () => {
-        enableSound();
-        document.removeEventListener('click', unlock);
-        document.removeEventListener('touchstart', unlock);
-      };
-      document.addEventListener('click', unlock);
-      document.addEventListener('touchstart', unlock);
-    }
+    heroVideo.addEventListener('ended', () => {
+      heroPlayOverlay.classList.remove('hidden');
+      heroPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+      heroPlayBtn.setAttribute('aria-label', 'Play video');
+      heroVideo.parentElement.classList.remove('controls-visible');
+    });
   }
 
   /* -- VanillaTilt ------------------------------------------- */

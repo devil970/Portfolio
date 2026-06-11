@@ -72,15 +72,6 @@
 
 <body>
 
-  <!-- ═══ INTRO VIDEO OVERLAY ══════════════════════════════════════════════ -->
-  <div id="introOverlay">
-    <video id="introVideo" src="assets/introvideo.mp4" playsinline></video>
-    <div id="introPlayBtn" style="z-index:10001">
-      <i class="fas fa-play"></i>
-    </div>
-    <button id="introSkip"><i class="fas fa-forward" aria-hidden="true"></i> Skip</button>
-  </div>
-
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ═══ NAVBAR ══════════════════════════════════════════════════════════════ -->
@@ -111,80 +102,55 @@
 
     <!-- ═══ HERO ═════════════════════════════════════════════════════════════ -->
     <section id="home" class="hero" aria-labelledby="hero-heading">
-      <div class="container hero-content">
-        <div class="availability-badge" role="status" aria-live="polite">
-          <span class="availability-dot" aria-hidden="true"></span>
-          Available for Internships &amp; Junior Roles
-        </div>
-        <span class="greeting" aria-hidden="true">Hello, I'm</span>
-        <h1 id="hero-heading" class="name">Atharva Dhawane</h1>
-        <p class="title">Full Stack Web Developer &amp; <span class="highlight">Python Engineer</span></p>
-        <p class="hero-tagline">I turn real-world problems into production-ready web applications — from responsive frontends to scalable Python backends.</p>
-        <p class="description">
-          Specialized in <strong>JavaScript</strong>, <strong>Python (Flask)</strong>, <strong>PHP</strong>, and <strong>MySQL</strong> with 2+ years of hands-on experience delivering 15+ full-stack projects. Proficient in REST API development, database design, and responsive UI engineering.
-        </p>
-        <div class="hero-btns">
-          <a href="#projects" class="btn btn-primary"><i class="fas fa-rocket" aria-hidden="true"></i> View My Work</a>
-          <a href="assets/Atharva_Dhawane_Resume.pdf" download class="btn btn-outline" aria-label="Download resume PDF">
-            <i class="fas fa-file-download" aria-hidden="true"></i> Download Resume
-          </a>
-        </div>
-        <nav class="social-links" aria-label="Social media profiles">
-          <a href="https://github.com/devil970" target="_blank" rel="noopener noreferrer" aria-label="GitHub – Atharva Dhawane"><i class="fab fa-github" aria-hidden="true"></i></a>
-          <a href="https://www.linkedin.com/in/atharva-dhawane-6486551b2/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn – Atharva Dhawane"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
-          <a href="mailto:atharvadhawane789@gmail.com" aria-label="Email Atharva Dhawane"><i class="fas fa-envelope" aria-hidden="true"></i></a>
-        </nav>
-      </div>
-      <div class="hero-visual">
-
-        <!-- Freelance badge above the card -->
-        <div class="hero-freelance-badge">
-          <span class="hero-freelance-dot"></span>
-          Available for Freelance &amp; Full-Time Opportunities
-        </div>
-
-        <!-- Video card -->
-        <div class="hero-video-card" id="heroVideoCard">
-          <div class="hero-video-glow"></div>
-          <video
-            id="heroVideo"
-            class="hero-video"
-            src="assets/introvideo.mp4"
-            autoplay
-            muted
-            playsinline
-            preload="auto"
-            aria-label="Atharva Dhawane – portfolio introduction video"
-          ></video>
-
-          <!-- Click-to-enable-sound overlay -->
-          <div id="heroSoundPrompt" class="hero-sound-prompt">
-            <span>🔊 Click to Enable Sound</span>
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="availability-badge" role="status" aria-live="polite">
+            <span class="availability-dot" aria-hidden="true"></span>
+            Available for Internships &amp; Junior Roles
           </div>
-
-          <!-- Video Controls -->
-          <div class="hero-video-controls" id="heroVideoControls">
-            <button class="hero-ctrl-btn" id="heroPlayBtn" aria-label="Play or pause video">
-              <i class="fas fa-pause"></i>
-            </button>
-            <button class="hero-ctrl-btn" id="heroMuteBtn" aria-label="Toggle sound">
-              <i class="fas fa-volume-mute"></i>
-            </button>
-            <button class="hero-ctrl-btn" id="heroReplayBtn" aria-label="Replay video">
-              <i class="fas fa-redo"></i>
-            </button>
+          <span class="greeting" aria-hidden="true">Hello, I'm</span>
+          <h1 id="hero-heading" class="name">Atharva Dhawane</h1>
+          <p class="title">Full Stack Web Developer &amp; <span class="highlight">Python Engineer</span></p>
+          <p class="hero-tagline">I turn real-world problems into production-ready web applications — from responsive frontends to scalable Python backends.</p>
+          <p class="description">
+            Specialized in <strong>JavaScript</strong>, <strong>Python (Flask)</strong>, <strong>PHP</strong>, and <strong>MySQL</strong> with 2+ years of hands-on experience delivering 15+ full-stack projects. Proficient in REST API development, database design, and responsive UI engineering.
+          </p>
+          <div class="hero-btns">
+            <a href="#projects" class="btn btn-primary"><i class="fas fa-rocket" aria-hidden="true"></i> View My Work</a>
+            <a href="assets/Atharva_Dhawane_Resume.pdf" download class="btn btn-outline" aria-label="Download resume PDF">
+              <i class="fas fa-file-download" aria-hidden="true"></i> Download Resume
+            </a>
           </div>
-
-          <!-- Floating tech stack overlay -->
-          <div class="hero-tech-overlay">
-            <span>JavaScript</span>
-            <span>Python</span>
-            <span>Flask</span>
-            <span>MySQL</span>
-            <span>PHP</span>
+          <nav class="social-links" aria-label="Social media profiles">
+            <a href="https://github.com/devil970" target="_blank" rel="noopener noreferrer" aria-label="GitHub – Atharva Dhawane"><i class="fab fa-github" aria-hidden="true"></i></a>
+            <a href="https://www.linkedin.com/in/atharva-dhawane-6486551b2/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn – Atharva Dhawane"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+            <a href="mailto:atharvadhawane789@gmail.com" aria-label="Email Atharva Dhawane"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+          </nav>
+        </div>
+        <div class="hero-visual">
+          <!-- Freelance Badge -->
+          <div class="hero-freelance-badge">
+            <span class="hero-freelance-dot"></span>
+            Available for Freelance Projects
+          </div>
+          <div class="hero-video-card">
+            <div class="hero-video-glow"></div>
+            <video class="hero-video" id="heroVideo" src="assets/introvideo.mp4" playsinline></video>
+            <div class="hero-play-overlay" id="heroPlayOverlay">
+              <div class="hero-center-play" id="heroPlayCenterBtn">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+            <div class="hero-video-controls" id="heroVideoControls">
+              <button class="hero-ctrl-btn" id="heroPlayBtn" aria-label="Play video">
+                <i class="fas fa-play"></i>
+              </button>
+              <button class="hero-ctrl-btn" id="heroMuteBtn" aria-label="Mute video">
+                <i class="fas fa-volume-mute"></i>
+              </button>
+            </div>
           </div>
         </div>
-
       </div>
     </section>
 
